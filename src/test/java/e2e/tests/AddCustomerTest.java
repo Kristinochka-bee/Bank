@@ -11,7 +11,6 @@ import org.testng.annotations.Test;
 public class AddCustomerTest extends TestBase {
     Faker faker = new Faker();
 
-
 //positive
     @Test
     public void addCustomerWithValidData(){
@@ -23,8 +22,15 @@ public class AddCustomerTest extends TestBase {
             app.getRegister().fillRegistrationForm(firstName, lastName, postCode);
             app.getRegister().clickAddCustomerButton();
 
+            String expectedResult = "Customer added successfully with customer id :";
+            String actualResult = app.getRegister().getAlertText();
+            Assert.assertTrue(actualResult.contains(expectedResult));
+            app.getRegister().clickAlertOkButton();
+
+
 
     }
+
 
     //negative
     @Test

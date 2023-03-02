@@ -31,6 +31,13 @@ public class CommonHelpers  {
         return wait;
     }
 
+    public String getAlertText(){
+        return driver.switchTo().alert().getText();
+    }
+
+    public void clickAlertOkButton(){
+        driver.switchTo().alert().accept();
+    }
 
 
     public void clickOnVisibleElement(By locator) {
