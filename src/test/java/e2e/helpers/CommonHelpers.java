@@ -1,33 +1,29 @@
 package e2e.helpers;
-import org.monte.media.Format;
-import org.monte.media.FormatKeys;
-import org.monte.media.math.Rational;
-import org.monte.screenrecorder.ScreenRecorder;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
+import java.time.Duration;
 
-import static org.monte.media.FormatKeys.*;
-import static org.monte.media.FormatKeys.FrameRateKey;
-import static org.monte.media.VideoFormatKeys.*;
-import static org.monte.media.VideoFormatKeys.QualityKey;
 
 public class CommonHelpers  {
+    By searchField = By.xpath("//input[@type=\"text\"]");
+    By searchResult = By.xpath("//tr[@class='ng-scope']");
+    By customersButton = By.xpath("//button[normalize-space()=\"Customers\"]");
     WebDriver driver;
     public WebDriverWait wait;
 
     public CommonHelpers(WebDriver driver) {
         this.driver = driver;
     }
-
+    Duration TIMEOUT = Duration.ofSeconds(10);
     public WebDriverWait setWait() {
-        wait = new WebDriverWait(driver, 10);
+        wait = new WebDriverWait(driver, TIMEOUT);
         return wait;
     }
 
@@ -67,6 +63,16 @@ public class CommonHelpers  {
         driver.findElement(locator).click();
         driver.findElement(locator).clear();
         driver.findElement(locator).sendKeys(userData);
+    }
+    public void clickToCustomersButton() throws InterruptedException {
+        driver.findElement(customersButton).click();
+    }
+    public void getCustomerSearch(String firstName) {
+        driver.findElement(searchField).clear();
+        driver.findElement(searchField).sendKeys(firstName);
+    }
+    public String getCustomerSearchData() {
+       return driver.findElement(searchResult).getText();
     }
 
 }

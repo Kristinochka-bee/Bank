@@ -13,10 +13,12 @@ public class AddCustomerTest extends TestBase {
 
 //positive
     @Test
-    public void addCustomerWithValidData(){
+    public void addCustomerWithValidData() throws InterruptedException {
             String firstName = faker.internet().domainName();
             String lastName = faker.internet().domainName();
             String postCode = faker.internet().uuid();
+
+            String fullName = firstName + " " + lastName;
 
             app.getRegister().goToAddCustomerPage();
             app.getRegister().fillRegistrationForm(firstName, lastName, postCode);
@@ -27,6 +29,14 @@ public class AddCustomerTest extends TestBase {
             Assert.assertTrue(actualResult.contains(expectedResult));
             app.getRegister().clickAlertOkButton();
 
+            app.getRegister().clickToCustomersButton();
+            app.getRegister().getCustomerSearch(firstName);
+            app.getRegister().getCustomerSearchData();
+
+
+            String actualResultOfFoundCustomer = app.getRegister().getCustomerSearchData();
+            Assert.assertTrue(actualResultOfFoundCustomer.contains(fullName));
+            Assert.assertTrue(actualResultOfFoundCustomer.contains(postCode));
 
 
     }
@@ -47,7 +57,7 @@ public class AddCustomerTest extends TestBase {
 
     //TODO дописать данный метод, вытащить текст из всплывающего окна (ошибки)
     @Test
-    public void addExistingCustomer(){
+    public void addExistingCustomer() {
         String firstName = "test@gmail.com";
         String lastName = "test@gmail.com";
         String postCode = "10709";
@@ -57,9 +67,5 @@ public class AddCustomerTest extends TestBase {
         app.getRegister().fillRegistrationForm(firstName, lastName, postCode);
         app.getRegister().clickAddCustomerButton();
         app.getRegister().checkItemTextInPopWindow(expectedErrorMessage, "Error");
-
-
     }
-
-
 }
