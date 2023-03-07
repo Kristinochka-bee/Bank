@@ -2,7 +2,6 @@ package e2e.tests;
 
 import com.github.javafaker.Faker;
 import e2e.TestBase;
-import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -14,11 +13,10 @@ public class AddCustomerTest extends TestBase {
 //positive
     @Test
     public void addCustomerWithValidData() throws InterruptedException {
-            String firstName = faker.internet().domainName();
-            String lastName = faker.internet().domainName();
-            String postCode = faker.internet().uuid();
-
-            String fullName = firstName + " " + lastName;
+            String firstName = faker.name().firstName();
+            String lastName = faker.name().lastName();
+            String postCode = faker.address().zipCode();
+            String fullNameAndPostCode = firstName + " " + lastName + " " + postCode;
 
             app.getRegister().goToAddCustomerPage();
             app.getRegister().fillRegistrationForm(firstName, lastName, postCode);
@@ -30,14 +28,11 @@ public class AddCustomerTest extends TestBase {
             app.getRegister().clickAlertOkButton();
 
             app.getRegister().clickToCustomersButton();
+            app.getRegister().setWait();
             app.getRegister().getCustomerSearch(firstName);
-            app.getRegister().getCustomerSearchData();
-
 
             String actualResultOfFoundCustomer = app.getRegister().getCustomerSearchData();
-            Assert.assertTrue(actualResultOfFoundCustomer.contains(fullName));
-            Assert.assertTrue(actualResultOfFoundCustomer.contains(postCode));
-
+            Assert.assertTrue(actualResultOfFoundCustomer.contains(fullNameAndPostCode));
 
     }
 
@@ -53,19 +48,36 @@ public class AddCustomerTest extends TestBase {
         app.getRegister().fillRegistrationForm(firstName, lastName, postCode);
         app.getRegister().clickAddCustomerButton();
 
+        String expectedErrorMessage = "Please check the details. Customer may be duplicate.";
+        String actualResult = app.getRegister().getAlertText();
+        Assert.assertTrue(actualResult.contains(expectedErrorMessage));
+        app.getRegister().clickAlertOkButton();
+
     }
 
-    //TODO дописать данный метод, вытащить текст из всплывающего окна (ошибки)
     @Test
-    public void addExistingCustomer() {
-        String firstName = "test@gmail.com";
-        String lastName = "test@gmail.com";
+    public void addExistingCustomer() throws InterruptedException {
+        String firstName = "Boris";
+        String lastName = "Risker";
         String postCode = "10709";
+
         String expectedErrorMessage = "Please check the details. Customer may be duplicate.";
 
         app.getRegister().goToAddCustomerPage();
         app.getRegister().fillRegistrationForm(firstName, lastName, postCode);
         app.getRegister().clickAddCustomerButton();
-        app.getRegister().checkItemTextInPopWindow(expectedErrorMessage, "Error");
+
+        String expectedResult = "Customer added successfully with customer id :";
+        String actualResult = app.getRegister().getAlertText();
+        Assert.assertTrue(actualResult.contains(expectedResult));
+        app.getRegister().clickAlertOkButton();
+
+        app.getRegister().clickAddCustomersBigButton();
+        app.getRegister().fillRegistrationForm(firstName, lastName, postCode);
+        app.getRegister().clickAddCustomerButton();
+
+        String actualResultOfError = app.getRegister().getAlertText();
+        Assert.assertTrue(actualResultOfError.contains(expectedErrorMessage));
+        app.getRegister().clickAlertOkButton();
     }
 }

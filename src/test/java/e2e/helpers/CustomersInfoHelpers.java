@@ -14,7 +14,5 @@ public class CustomersInfoHelpers extends CommonHelpers{
         driver.findElement(By.xpath("//button[normalize-space()='Customers']")).isDisplayed();
         driver.findElement(By.xpath("//button[normalize-space()='Customers']")).click();
     }
-    public void checkTextInPopWindow(){
 
-    }
 }

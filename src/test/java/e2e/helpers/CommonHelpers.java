@@ -3,8 +3,6 @@ package e2e.helpers;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
@@ -13,8 +11,13 @@ import java.time.Duration;
 
 public class CommonHelpers  {
     By searchField = By.xpath("//input[@type=\"text\"]");
-    By searchResult = By.xpath("//tr[@class='ng-scope']");
+
     By customersButton = By.xpath("//button[normalize-space()=\"Customers\"]");
+
+    By addCustomerBigButton = By.xpath("//button[@class='btn btn-lg tab btn-primary']");
+    By searchResult = By.xpath("//tr[@class='ng-scope']");
+
+
     WebDriver driver;
     public WebDriverWait wait;
 
@@ -67,13 +70,16 @@ public class CommonHelpers  {
     public void clickToCustomersButton() throws InterruptedException {
         driver.findElement(customersButton).click();
     }
+    public void clickAddCustomersBigButton() throws InterruptedException {
+        driver.findElement(addCustomerBigButton).click();
+    }
     public void getCustomerSearch(String firstName) {
         driver.findElement(searchField).clear();
         driver.findElement(searchField).sendKeys(firstName);
     }
-    public String getCustomerSearchData() {
-       return driver.findElement(searchResult).getText();
-    }
 
+    public String getCustomerSearchData() {
+        return driver.findElement(searchResult).getText();
+    }
 }
 
